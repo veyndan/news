@@ -1,14 +1,34 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.veyndan.news.MainFragment">
+    android:orientation="vertical"
+    tools:context="com.veyndan.news.fragment.MainFragment">
+
+    <FrameLayout
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/category_img"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Technology" />
+
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:padding="4dp"
-        android:clipToPadding="false"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="320dp"
+        android:padding="2dp"
+        android:clipToPadding="false" />
 
-</FrameLayout>
+</LinearLayout>

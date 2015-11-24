@@ -3,12 +3,14 @@ package com.veyndan.news.model;
 public class Article {
     private String title;
     private String publisher;
+    private String publisherImg;
     private String pubDate;
     private String img;
 
-    public Article(String title, String publisher, String pubDate, String img) {
+    public Article(String title, String publisher, String publisherImg, String pubDate, String img) {
         this.title = title;
         this.publisher = publisher;
+        this.publisherImg = publisherImg;
         this.pubDate = pubDate;
         this.img = img;
     }
@@ -19,6 +21,10 @@ public class Article {
 
     public String getPublisher() {
         return publisher;
+    }
+
+    public String getPublisherImg() {
+        return publisherImg;
     }
 
     public String getPubDate() {
