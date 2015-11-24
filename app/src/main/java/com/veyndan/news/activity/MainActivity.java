@@ -1,6 +1,10 @@
 package com.veyndan.news.activity;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +18,16 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Technology");
+
+        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
+                new int[] { android.R.attr.actionBarSize });
+        int actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+        Log.d(TAG, String.valueOf(convertPixelsToDp(actionBarHeight, this)));
+        styledAttributes.recycle();
+    }
+
+    public static float convertPixelsToDp(float px, Context context){
+        return px / context.getResources().getDisplayMetrics().density;
     }
 
     @Override
