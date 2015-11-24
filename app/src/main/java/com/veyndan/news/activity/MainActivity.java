@@ -18,15 +18,21 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Technology");
 
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
-        int actionBarHeight = (int) styledAttributes.getDimension(0, 0);
-        Log.d(TAG, String.valueOf(convertPixelsToDp(actionBarHeight, this)));
-        styledAttributes.recycle();
+//        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
+//                new int[] { android.R.attr.actionBarSize });
+//        int actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+//        Log.d(TAG, "Toolbar height: " + pxToDp(actionBarHeight, this)); // 56dp
+//        styledAttributes.recycle();
+
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        Log.d(TAG, "Width: " + pxToDp(metrics.widthPixels, this)); // 360dp
+//        Log.d(TAG, "Height: " + pxToDp(metrics.heightPixels, this)); // 640dp
     }
 
-    public static float convertPixelsToDp(float px, Context context){
+    public static float pxToDp(float px, Context context){
         return px / context.getResources().getDisplayMetrics().density;
     }
 
