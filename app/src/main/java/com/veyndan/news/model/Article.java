@@ -1,17 +1,17 @@
 package com.veyndan.news.model;
 
+import android.support.annotation.Nullable;
+
 public class Article {
     private String title;
     private String publisher;
     private String publisherImg;
-    private String pubDate;
     private String img;
 
-    public Article(String title, String publisher, String publisherImg, String pubDate, String img) {
+    public Article(String publisher, String publisherImg, String title, @Nullable String img) {
         this.title = title;
         this.publisher = publisher;
         this.publisherImg = publisherImg;
-        this.pubDate = pubDate;
         this.img = img;
     }
 
@@ -25,10 +25,6 @@ public class Article {
 
     public String getPublisherImg() {
         return publisherImg;
-    }
-
-    public String getPubDate() {
-        return pubDate;
     }
 
     public String getImg() {

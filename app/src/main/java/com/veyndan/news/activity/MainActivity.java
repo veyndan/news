@@ -1,10 +1,6 @@
 package com.veyndan.news.activity;
 
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,22 +14,14 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Technology");
+        getSupportActionBar().setTitle("Facebook");
 
-//        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-//                new int[] { android.R.attr.actionBarSize });
-//        int actionBarHeight = (int) styledAttributes.getDimension(0, 0);
-//        Log.d(TAG, "Toolbar height: " + pxToDp(actionBarHeight, this)); // 56dp
-//        styledAttributes.recycle();
-
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//        Log.d(TAG, "Width: " + pxToDp(metrics.widthPixels, this)); // 360dp
-//        Log.d(TAG, "Height: " + pxToDp(metrics.heightPixels, this)); // 640dp
-    }
-
-    public static float pxToDp(float px, Context context){
-        return px / context.getResources().getDisplayMetrics().density;
+        // 25dp StatusBarHeight
+        // 56dp ActionBarHeight
+        // 360dp:640dp 9:16 ScreenWidth:ScreenHeight DONE
+        // 3:4 Article:Category DONE
+        // 6:19 Profile:Image DONE
+        // 5 Article max lines
     }
 
     @Override

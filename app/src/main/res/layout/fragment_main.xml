@@ -1,15 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.veyndan.news.fragment.MainFragment">
 
     <FrameLayout
-        android:id="@+id/category"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="368dp">
 
         <ImageView
             android:id="@+id/category_img"
@@ -30,16 +27,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/category_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_medium" />
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </FrameLayout>
@@ -47,9 +46,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="288dp"
-        android:background="#161616"
+        android:layout_height="272dp"
+        android:layout_marginTop="368dp"
         android:clipToPadding="false"
-        android:paddingRight="1dp" />
+        android:padding="0.5dp" />
 
-</LinearLayout>
+</FrameLayout>
