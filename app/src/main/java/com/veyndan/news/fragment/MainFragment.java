@@ -58,27 +58,25 @@ public class MainFragment extends Fragment {
         categoryTitle.setText(article.getTitle());
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            float xOffset = -1, yOffset = -1;
-            int height, width;
+            float yOffset = -1;
+            int height;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // For some reason action_down is not called first time on action_down
-                if (event.getAction() == MotionEvent.ACTION_DOWN || xOffset == -1 || yOffset == -1) {
-                    xOffset = event.getRawX() - v.getX();
-                    yOffset = event.getRawY() - v.getY();
+                if (event.getAction() == MotionEvent.ACTION_DOWN || yOffset == -1) {
                     ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
                     height = layoutParams.height;
-                    width = layoutParams.width;
-                } else {
-                    int updateHeight = (int) (-event.getRawY() + yOffset + 1920);
-                    if (updateHeight > 816) {
-                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, updateHeight);
-                        params.topMargin = 1920 - updateHeight;
-                        v.setLayoutParams(params);
+                    yOffset = event.getRawY() - v.getY();
+                }
+                float updateHeight = 1920f - event.getRawY() + yOffset;
+                if (updateHeight >= 816f && updateHeight <= 1920f) {
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(v.getLayoutParams());
+                    params.topMargin = (int) (1920f - (height + updateHeight) / 2f);
+                    v.setLayoutParams(params);
 
-                        v.setScaleX(updateHeight / 816f);
-                    }
+                    v.setScaleX(updateHeight / 816f);
+                    v.setScaleY(updateHeight / 816f);
                 }
                 return false;
             }
