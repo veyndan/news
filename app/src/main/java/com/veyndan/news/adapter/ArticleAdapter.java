@@ -7,9 +7,14 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -91,6 +96,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public int getItemCount() {
+//        return 1;
         return articles.size();
     }
 
@@ -100,6 +106,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         TextView title;
         TextView publisher;
 
+        private static final float SCREEN_WIDTH = 1080f;
+        private static final float SCREEN_HEIGHT = 1920f;
+        private static final float UNSCALED_ARTICLE_HEIGHT = 816f;
+
         public ViewHolder(View itemView) {
             super(itemView);
             publisherImg = (ImageView) itemView.findViewById(R.id.article_profile_img);
@@ -107,12 +117,60 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             title = (TextView) itemView.findViewById(R.id.article_title);
             publisher = (TextView) itemView.findViewById(R.id.article_publisher);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnTouchListener(new View.OnTouchListener() {
+                float yOffset = -1; // Distance from top of screen to finger
+                float articleHeight;
+
                 @Override
-                public void onClick(View v) {
-                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) v.getLayoutParams();
-                    params.height = 1000;
-                    v.setLayoutParams(params);
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO set defaults in onBindViewHolder for each article as otherwise recycling view params
+                    // TODO increase width of all visible items
+
+                    Log.d(TAG, "event.getAction(): " + event.getAction());
+
+                    // For some reason action_down is not called first time on action_down
+                    if (event.getAction() == MotionEvent.ACTION_DOWN || yOffset == -1) {
+                        yOffset = event.getRawY();
+                        articleHeight = v.getHeight();
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        return true;
+                    }
+
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_MOVE:
+                            float updateHeight = yOffset - event.getRawY() + articleHeight;
+
+//                            Log.d(TAG, "yOffset: " + yOffset + "\tevent.getRawY(): " + event.getRawY());
+
+//                            if (updateHeight >= (UNSCALED_ARTICLE_HEIGHT + 1) && updateHeight <= SCREEN_HEIGHT) {
+                                FrameLayout.LayoutParams parentParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) updateHeight);
+                                parentParams.topMargin = (int) (SCREEN_HEIGHT - updateHeight);
+                                ((RecyclerView) v.getParent()).setLayoutParams(parentParams);
+
+                                RecyclerView.LayoutParams itemParams = (RecyclerView.LayoutParams) v.getLayoutParams();
+                                itemParams.width = (int) (updateHeight * (SCREEN_WIDTH / SCREEN_HEIGHT));
+                                v.setLayoutParams(itemParams);
+//                            } else {
+                                // If not in range then update where pivot is e.g. if requested
+                                // height too small then pivot continues to move so any movement
+                                // up will result in the article getting bigger instead of having
+                                // to pass the original pivot point again
+//                                yOffset = event.getRawY();
+//                            }
+                            return true;
+                        case MotionEvent.ACTION_UP:
+//                            float endScale;
+//                        if (v.getScaleX() < 1.5f) {
+//                            endScale = 1f / v.getScaleX();
+//                        } else {
+//                            endScale = screenHeight / (v.getScaleX() * unscaledArticleHeight);
+//                        }
+//                        scaleView(v, 1f, endScale, event.getRawX() / (screenHeight - unscaledArticleHeight));
+//                        yOffset = -1;
+                            return false;
+                        default:
+                            return true;
+                    }
                 }
             });
         }

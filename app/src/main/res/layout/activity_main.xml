@@ -55,19 +55,13 @@
             app:titleTextAppearance="@style/Toolbar" />
     </FrameLayout>
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="272dp"
-            android:layout_marginTop="368dp"
-            android:background="@color/body_text_1"
-            android:clipToPadding="false"
-            android:padding="0.5dp" />
-
-    </FrameLayout>
+        android:layout_height="272dp"
+        android:layout_marginTop="368dp"
+        android:background="@color/body_text_1"
+        android:clipToPadding="false"
+        android:padding="0.5dp" />
 
 </FrameLayout>

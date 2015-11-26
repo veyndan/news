@@ -39,12 +39,12 @@ public class MainActivity extends BaseActivity {
 
         // 25dp StatusBarHeight
         // 56dp ActionBarHeight
-        // 360dp:640dp 9:16 ScreenWidth:ScreenHeight DONE
+        // 360dp:640dp 1080px:1920px 9:16 ScreenWidth:ScreenHeight DONE
         // 3:4 Article:Category DONE
         // 6:19 Profile:Image DONE
         // 5 Article max lines
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         ImageView categoryImg = (ImageView) findViewById(R.id.category_img);
         TextView categoryPublisher = (TextView) findViewById(R.id.category_publisher);
         TextView categoryTitle = (TextView) findViewById(R.id.category_title);
@@ -58,83 +58,6 @@ public class MainActivity extends BaseActivity {
         Glide.with(this).load(article.getImg()).into(categoryImg);
         categoryPublisher.setText(article.getPublisher());
         categoryTitle.setText(article.getTitle());
-
-        final float screenHeight = 1920f;
-        final float unscaledArticleHeight = 816f;
-
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            float yOffset = -1; // distance from top of screen to finger
-            float scaledArticleHeight;
-            float s = 1f;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // For some reason action_down is not called first time on action_down
-                if (event.getAction() == MotionEvent.ACTION_DOWN || yOffset == -1) {
-                    scaledArticleHeight = unscaledArticleHeight * s;
-                    yOffset = event.getRawY();
-
-//                    Log.d(TAG, scaledArticleHeight + "");
-                    return false;
-                }
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        float updateHeight = yOffset - event.getRawY() + scaledArticleHeight;
-                        Log.d(TAG, "updateHeight: " + updateHeight + "\tyOffset: " + yOffset + "\tevent.getRawY(): " + event.getRawY());
-                        if (updateHeight <= screenHeight) {
-                            v.setPivotY(unscaledArticleHeight);
-                            float scale = updateHeight / unscaledArticleHeight;
-                            v.setScaleX(scale);
-                            v.setScaleY(scale);
-                        }
-                        return false;
-                    case MotionEvent.ACTION_UP:
-                        float endScale;
-                        if (v.getScaleX() < 1.5f) {
-                            endScale = 1f / v.getScaleX();
-                            s = 1f;
-                        } else {
-                            endScale = screenHeight / (v.getScaleX() * unscaledArticleHeight);
-                            s = screenHeight / unscaledArticleHeight;
-                        }
-                        scaleView(v, 1f, endScale, event.getRawX() / (screenHeight - unscaledArticleHeight));
-                        yOffset = -1;
-                        return false;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-    }
-
-    public void scaleView(final View v, float startScale, final float endScale, float xPivot) {
-        Animation anim = new ScaleAnimation(
-                startScale, endScale, // Start and end values for the X axis scaling
-                startScale, endScale, // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, xPivot, // Pivot point of X scaling
-                Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
-        anim.setFillAfter(true); // Needed to keep the result of the animation
-        anim.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-        anim.setInterpolator(new DecelerateInterpolator());
-        anim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                v.invalidate();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        v.startAnimation(anim);
     }
 
     private List<Article> getArticles() {
