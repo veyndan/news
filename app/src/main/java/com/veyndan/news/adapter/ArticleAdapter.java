@@ -10,6 +10,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,12 +29,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private static final int TYPE_IMAGE = 2;
 
     private Context context;
-    private RecyclerView recyclerView;
     private List<Article> articles;
 
-    public ArticleAdapter(Context context, RecyclerView recyclerView, List<Article> articles) {
+    public ArticleAdapter(Context context, List<Article> articles) {
         this.context = context;
-        this.recyclerView = recyclerView;
         this.articles = articles;
     }
 
@@ -67,7 +66,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Article article = articles.get(position);
         switch (holder.getItemViewType()) {
             case TYPE_TEXT_IMAGE:
@@ -101,12 +100,21 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         TextView title;
         TextView publisher;
 
-        public ViewHolder(final View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             publisherImg = (ImageView) itemView.findViewById(R.id.article_profile_img);
             image = (ImageView) itemView.findViewById(R.id.article_image);
             title = (TextView) itemView.findViewById(R.id.article_title);
             publisher = (TextView) itemView.findViewById(R.id.article_publisher);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) v.getLayoutParams();
+                    params.height = 1000;
+                    v.setLayoutParams(params);
+                }
+            });
         }
     }
 }

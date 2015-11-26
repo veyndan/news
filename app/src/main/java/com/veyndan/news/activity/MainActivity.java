@@ -9,12 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,58 +59,81 @@ public class MainActivity extends BaseActivity {
         categoryPublisher.setText(article.getPublisher());
         categoryTitle.setText(article.getTitle());
 
+        final float screenHeight = 1920f;
+        final float unscaledArticleHeight = 816f;
+
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            float yOffset = -1;
-            int height;
+            float yOffset = -1; // distance from top of screen to finger
+            float scaledArticleHeight;
+            float s = 1f;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // For some reason action_down is not called first time on action_down
-                if (yOffset == -1) {
-                    ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-                    height = layoutParams.height;
-                    yOffset = event.getRawY() - v.getY();
+                if (event.getAction() == MotionEvent.ACTION_DOWN || yOffset == -1) {
+                    scaledArticleHeight = unscaledArticleHeight * s;
+                    yOffset = event.getRawY();
+
+//                    Log.d(TAG, scaledArticleHeight + "");
+                    return false;
                 }
 
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-                        height = layoutParams.height;
-                        yOffset = event.getRawY();
-                        break;
                     case MotionEvent.ACTION_MOVE:
-                        float updateHeight = 1920f - event.getRawY() + yOffset;
-//                        if (updateHeight >= 816f && updateHeight <= 1920f) {
-                        v.setPivotY(816f);
-                        v.setScaleX(updateHeight / 816f);
-                        v.setScaleY(updateHeight / 816f);
-//                        }
-                        break;
+                        float updateHeight = yOffset - event.getRawY() + scaledArticleHeight;
+                        Log.d(TAG, "updateHeight: " + updateHeight + "\tyOffset: " + yOffset + "\tevent.getRawY(): " + event.getRawY());
+                        if (updateHeight <= screenHeight) {
+                            v.setPivotY(unscaledArticleHeight);
+                            float scale = updateHeight / unscaledArticleHeight;
+                            v.setScaleX(scale);
+                            v.setScaleY(scale);
+                        }
+                        return false;
                     case MotionEvent.ACTION_UP:
                         float endScale;
                         if (v.getScaleX() < 1.5f) {
                             endScale = 1f / v.getScaleX();
+                            s = 1f;
                         } else {
-                            endScale = 1920f / (v.getScaleX() * 816f);
+                            endScale = screenHeight / (v.getScaleX() * unscaledArticleHeight);
+                            s = screenHeight / unscaledArticleHeight;
                         }
-                        scaleView(v, 1f, endScale);
-                        break;
+                        scaleView(v, 1f, endScale, event.getRawX() / (screenHeight - unscaledArticleHeight));
+                        yOffset = -1;
+                        return false;
+                    default:
+                        return false;
                 }
-                return false;
             }
         });
 
     }
 
-    public void scaleView(View v, float startScale, float endScale) {
+    public void scaleView(final View v, float startScale, final float endScale, float xPivot) {
         Animation anim = new ScaleAnimation(
                 startScale, endScale, // Start and end values for the X axis scaling
                 startScale, endScale, // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, xPivot, // Pivot point of X scaling
                 Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
         anim.setFillAfter(true); // Needed to keep the result of the animation
         anim.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
         anim.setInterpolator(new DecelerateInterpolator());
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.invalidate();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         v.startAnimation(anim);
     }
 
