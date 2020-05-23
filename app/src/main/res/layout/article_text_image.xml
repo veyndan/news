@@ -22,7 +22,7 @@
             android:paddingBottom="4dp" />
 
         <TextView
-            android:id="@+id/article_publisher"
+            android:id="@+id/article_profile_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/body_text_1"
@@ -30,7 +30,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/article_title"
+            android:id="@+id/article_story_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -40,7 +40,7 @@
             android:textSize="@dimen/text_size_xsmall" />
 
         <ImageView
-            android:id="@+id/article_image"
+            android:id="@+id/article_story_img"
             android:layout_width="147dp"
             android:layout_height="147dp"
             android:scaleType="centerCrop" />
